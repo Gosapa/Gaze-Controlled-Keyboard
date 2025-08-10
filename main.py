@@ -43,12 +43,22 @@ while True:
 
         landmarks = predictor(gray, face)
 
+        # Detect Blinking
         left_ratio = get_blinking_ratio([36, 39, 37, 38, 40, 41], landmarks)
         right_ratio = get_blinking_ratio([42, 45, 43, 44, 46, 47], landmarks)
         blinking_ratio = (left_ratio + right_ratio) / 2
 
         if blinking_ratio > 5.7:
             cv2.putText(frame, "BLINKING", (50, 150), font, 8, (255, 255, 255))
+
+        # Gaze Detection
+        left_eye_region = np.array([(landmarks.part(36).x, landmarks.part(36).y),
+                                    (landmarks.part(37).x, landmarks.part(37).y),
+                                    (landmarks.part(38).x, landmarks.part(38).y),
+                                    (landmarks.part(39).x, landmarks.part(39).y),
+                                    (landmarks.part(40).x, landmarks.part(40).y),
+                                    (landmarks.part(41).x, landmarks.part(41).y)], np.int32)
+        cv2.polylines(frame, [left_eye_region], True, (0, 0, 255), 2)
 
     cv2.imshow("Frame", frame)
 
