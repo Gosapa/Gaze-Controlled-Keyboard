@@ -16,11 +16,11 @@ def midpoint (p1, p2):
 def get_blinking_ratio(eyepoints, facial_landmarks):
     leftPoint = (facial_landmarks.part(eyepoints[0]).x, facial_landmarks.part(eyepoints[0]).y)
     rightPoint = (facial_landmarks.part(eyepoints[1]).x, facial_landmarks.part(eyepoints[1]).y)
-    hor_line = cv2.line(frame, leftPoint, rightPoint, (0, 255, 0), 2)
+    # hor_line = cv2.line(frame, leftPoint, rightPoint, (0, 255, 0), 2)
 
     topPoint = midpoint(facial_landmarks.part(eyepoints[2]), facial_landmarks.part(eyepoints[3]))
     botPoint = midpoint(facial_landmarks.part(eyepoints[4]), facial_landmarks.part(eyepoints[5]))
-    vert_line = cv2.line(frame, topPoint, botPoint, (0, 0, 255), 2)
+    # vert_line = cv2.line(frame, topPoint, botPoint, (0, 0, 255), 2)
 
     hor_line_length = hypot(rightPoint[0] - leftPoint[0], rightPoint[1] - leftPoint[1])
     ver_line_length = hypot(topPoint[0] - botPoint[0], topPoint[1] - botPoint[1])
@@ -58,6 +58,20 @@ while True:
                                     (landmarks.part(39).x, landmarks.part(39).y),
                                     (landmarks.part(40).x, landmarks.part(40).y),
                                     (landmarks.part(41).x, landmarks.part(41).y)], np.int32)
+        min_x = np.min(left_eye_region[:, 0])
+        max_x = np.max(left_eye_region[:, 0])
+        min_y = np.min(left_eye_region[:, 1])
+        max_y = np.max(left_eye_region[:, 1])
+
+        eye = frame[min_y: max_y, min_x: max_x]
+        gray_eye = cv2.cvtColor(eye, cv2.COLOR_BGR2GRAY)
+        _, threshold_eye = cv2.threshold(gray_eye, 70, 255, cv2.THRESH_BINARY)
+
+        eye = cv2.resize(eye, None, fx=5, fy=5)
+        threshold_eye = cv2.resize(threshold_eye, None, fx=5, fy=5)
+        cv2.imshow("Eye", eye)
+        cv2.imshow("Threshold", threshold_eye)
+
         cv2.polylines(frame, [left_eye_region], True, (0, 0, 255), 2)
 
     cv2.imshow("Frame", frame)
