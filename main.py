@@ -64,6 +64,8 @@ def get_gaze_ratio(eye_points, facial_landmarks):
 
     cv2.polylines(frame, [left_eye_region], True, (0, 0, 255), 2)
     if rightHalf_whiteCount == 0:
+        gaze_ratio_ltr = 5
+    elif leftHalf_whiteCount == 0:
         gaze_ratio_ltr = 1
     else:
         gaze_ratio_ltr = leftHalf_whiteCount / rightHalf_whiteCount
@@ -72,6 +74,7 @@ def get_gaze_ratio(eye_points, facial_landmarks):
 
 while True:
     _, frame = cap.read()
+    checker = np.zeros((500, 500, 3), np.uint8)
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     faces = detector(frame)
@@ -95,11 +98,22 @@ while True:
         # Gaze Detection
         gazeRatio_rightEye = get_gaze_ratio([42,43,44,45,46,47], landmarks)
         gazeRatio_leftEye = get_gaze_ratio([36,37,38,39,40,41], landmarks)
+        combined_gaze_ratio = (gazeRatio_rightEye + gazeRatio_leftEye) / 2
 
-        cv2.putText(frame, "Left: " + str(gazeRatio_leftEye), (50, 100), font, 2, (0, 0, 255), 3)
-        cv2.putText(frame, "Right: " + str(gazeRatio_rightEye), (50, 150), font, 2, (0, 0, 255), 3)
+
+        cv2.putText(frame, "Ratio: " + str(combined_gaze_ratio), (50, 150), font, 2, (0, 0, 255), 3)
+        if combined_gaze_ratio <= 1:
+            cv2.putText(frame, "Right", (50, 100), font, 2, (0, 0, 255), 3)
+            checker[:] = (0, 0, 255)
+        elif 1 < combined_gaze_ratio < 3:
+            cv2.putText(frame, "Center", (50, 100), font, 2, (0, 0, 255), 3)
+        else:
+            cv2.putText(frame, "Left", (50, 100), font, 2, (0, 0, 255), 3)
+            checker[:] = (255, 0, 0)
 
     cv2.imshow("Frame", frame)
+    cv2.imshow("Checker", checker)
+
 
     key = cv2.waitKey(1)
     if key == 27:
