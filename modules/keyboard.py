@@ -36,8 +36,9 @@ def put_transparent_image(background_img, overlay_img, x, y):
 
     return background_img
 
-def showKeyboard():
-    pass
+def draw_keyboard(background_img):
+    put_letter(background_img, 0, 0, 0, 100, 100)
+    put_letter(background_img, 1, 100, 0, 100, 100)
 
 def put_letter(background_img, korean_index, x, y, w, h):
     file_name = "./assets/KOR-Characters/" + str(korean_index) + ".png"
