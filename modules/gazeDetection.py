@@ -55,7 +55,7 @@ def get_gaze_ratio(frame, eye_points, facial_landmarks):
 
     eye = cv2.resize(grayed_eye, None, fx=5, fy=5)
     threshold_eye = cv2.resize(threshold_eye, None, fx=5, fy=5)
-    cv2.imshow("Threshold", threshold_eye) # Black & White Image
+    # cv2.imshow("Threshold", threshold_eye) # Black & White Image
 
     cv2.polylines(frame, [left_eye_region], True, (0, 0, 255), 2)
     if rightHalf_whiteCount == 0:
