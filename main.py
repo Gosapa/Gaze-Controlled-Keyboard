@@ -22,6 +22,7 @@ blink_frozen = False
 
 keyboard = np.full((1000, 1500, 3), [255, 255, 255], dtype=np.uint8)
 while True:
+    blinked = False
     _, frame = cap.read()
     checker = np.zeros((500, 500, 3), np.uint8) # Giant Screen that indicates the direction of gaze
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # Gray version of BGR image
