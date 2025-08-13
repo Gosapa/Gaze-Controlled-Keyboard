@@ -84,6 +84,7 @@ while True:
         if DEBUG_MODE:
             print("(DEBUG) Selected")
             print("(DEBUG) Current status: " + str(status))
+
         select(status, cur_selection)
         cur_stage = status[0]
         if DEBUG_MODE:

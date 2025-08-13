@@ -5,7 +5,15 @@ from assets.config import DEBUG_MODE
 
 def select(status, selection):
     update_status(status, selection)
-    print(character(status))
+    returned_character = character(status)
+    print(returned_character)
+    if len(returned_character) == 1:
+        if DEBUG_MODE:
+            print("(DEBUG) IN function `select`: Completed entering a character")
+        enter(character)
+        status[:] = [0, -1, -1, -1, -1, -1, -1]
+        return True
+    return False
 
     if DEBUG_MODE:
         print("(DEBUG) Selection Ended Successfully")
@@ -69,3 +77,6 @@ def correspondance(character):
                     6: 27,
                     8: 28}
     return SPECIAL_DICT[character]
+
+def enter(character):
+    pass
