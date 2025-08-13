@@ -3,7 +3,8 @@ import numpy as np
 import dlib
 from modules.gazeDetection import *
 from modules.keyboard import *
-from assets.constants import *
+from assets.config import *
+from modules.logic import *
 
 cap = cv2.VideoCapture(0)
 font = cv2.FONT_HERSHEY_PLAIN
@@ -15,7 +16,7 @@ cur_frame = 0
 cur_selection = 0
 cur_stage = 0
 gaze_direction = 0
-status = [0,0,0,0,0,0,0]
+status = [0,-1,-1,-1,-1,-1,-1]
 
 blinked = False
 blink_frozen = False
@@ -80,20 +81,24 @@ while True:
         blinked = False
         blink_frozen = True
         cur_frame = 0
-        print("Selected!")
-        # update_status(status, cur_selection)
+        if DEBUG_MODE:
+            print("(DEBUG) Selected")
+            print("(DEBUG) Current status: " + str(status))
+        select(status, cur_selection)
+        cur_stage = status[0]
+        if DEBUG_MODE:
+            print("(DEBUG) After Selection: " + str(status))
+
     if (unfreeze_frame):
         blink_frozen = False
+        blinked = False
         cur_frame = 0
         print("Unfroze")
 
     # Updates current selection according to the gaze
     if (gaze_move_index):
-        cur_selection = (cur_selection + gaze_direction)
-        if cur_selection == -1:
-            cur_selection = 0
-        elif cur_selection == MAX_SELECTION_STAGE[cur_stage]:
-            cur_selection = MAX_SELECTION_STAGE[cur_stage] - 1
+        if 0 <= cur_selection + gaze_direction < MAX_SELECTION_STAGE[cur_stage]:
+            cur_selection += gaze_direction
         print("Selection: " + str(cur_selection))
         cur_frame = (cur_frame % BLINK_FREEZE_THRESHOLD)
 
