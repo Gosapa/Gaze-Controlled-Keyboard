@@ -14,9 +14,9 @@ def update_status(status, selection):
     update_idx = 1
     while status[update_idx] != -1:
         update_idx += 1
-        if DEBUG_MODE:
-            print("(DEBUG) Whlie loop in update_status")
-            print("(DEBUG) Current update_idx: " + str(update_idx))
+        # if DEBUG_MODE:
+            # print("(DEBUG) Whlie loop in update_status")
+            # print("(DEBUG) Current update_idx: " + str(update_idx))
     status[update_idx] = selection
     status[0] += 1
 
@@ -48,13 +48,24 @@ def find_bsearch_consonant(selections):
             break
         idx += 1
     final_range = list(range(left, right))
+    if DEBUG_MODE:
+        print("(DEBUG) In function `find_bsearch_consonant`: idx: " + str(idx))
+    if len(final_range) == 1 and selections[4] == -1 and is_special(left):
+        final_range.append(correspondance(left))
+    elif len(final_range) == 1 and selections[4] != -1 and is_special(left):
+        if selections[idx] == 1:
+            final_range[0] = correspondance(left)
     return final_range
 
 def is_special(character):
     # Add Vowels too
     SPECIAL_CHARACTERS = [0, 2, 5, 6, 8]
+    return character in SPECIAL_CHARACTERS
+
+def correspondance(character):
     SPECIAL_DICT = {0: 24,
                     2: 25,
                     5: 26,
                     6: 27,
                     8: 28}
+    return SPECIAL_DICT[character]
