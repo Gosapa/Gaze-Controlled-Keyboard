@@ -37,7 +37,7 @@ def character(status):
         return find_bsearch_consonant(status[2:])
     # Vowel
     elif status[1] == 1:
-        pass
+        return find_bsearch_vowel(status[2:])
     # Special
     else:
         pass
@@ -64,6 +64,30 @@ def find_bsearch_consonant(selections):
         if selections[idx] == 1:
             final_range[0] = correspondance(left)
     return final_range
+
+def find_bsearch_vowel(selections):
+    left = 14
+    right = 23
+    idx = 0
+    while left + 1 < right:
+        mid = left + int((right - left - 1) / 2)
+        if selections[idx] == 0:
+            right = mid + 1
+        elif selections[idx] == 1:
+            left = mid + 1
+        else:
+            break
+        idx += 1
+    final_range = list(range(left, right))
+    if DEBUG_MODE:
+        print("(DEBUG) In function `find_bsearch_consonant`: idx: " + str(idx))
+    if len(final_range) == 1 and selections[4] == -1 and is_special(left):
+        final_range.append(correspondance(left))
+    elif len(final_range) == 1 and selections[4] != -1 and is_special(left):
+        if selections[idx] == 1:
+            final_range[0] = correspondance(left)
+    return final_range
+
 
 def is_special(character):
     # Add Vowels too
