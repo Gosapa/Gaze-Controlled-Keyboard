@@ -39,8 +39,11 @@ def put_transparent_image(background_img, overlay_img, x, y):
 
 def draw_keyboard(screen, status, cur_selection):
     # Stage 0: Selecting Consonant / Vowel / Special
-    # if status[0] == 0:
-    draw_first(screen, status, cur_selection)
+    if status[0] == 0:
+        draw_first(screen, status, cur_selection)
+    # Stage 1: Selecting first stage
+    elif status[0] == 1:
+        draw_second(screen, status, cur_selection)
 
     # put_letter(background_img, 0, 0, 0, 100, 100)
     # put_letter(background_img, 1, 100, 0, 100, 100)
@@ -58,6 +61,12 @@ def draw_first(screen, status, cur_selection):
     for i in range(0, 3):
         file_name = "./assets/menu/" + file_order[i] + ".png"
         put_menu(screen, file_name, gap_width*(i+1) + width*i + offset, gap_height + offset, width - 50, height - 50)
+
+def draw_second(screen, status, cur_selection):
+    box_num = 2
+    width = 450
+    height = 450
+    draw_boxes(screen, box_num, width, height, cur_selection)
 
 
 def put_menu(screen, file_name, start_x, start_y, w, h):

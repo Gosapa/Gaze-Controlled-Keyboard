@@ -80,6 +80,7 @@ while True:
 
     # Blink - Selection Logic
     if (blink_select):
+        keyboard = np.full((SCREEN_HEIGHT, SCREEN_WIDTH, 3), BACKGROUND_COLOR, dtype=np.uint8)
         blinked = False
         blink_frozen = True
         cur_frame = 0
