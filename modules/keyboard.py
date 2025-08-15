@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from assets.config import *
 
 def put_transparent_image(background_img, overlay_img, x, y):
     # background_img = background_img.copy()
@@ -36,9 +37,36 @@ def put_transparent_image(background_img, overlay_img, x, y):
 
     return background_img
 
-def draw_keyboard(background_img):
-    put_letter(background_img, 0, 0, 0, 100, 100)
-    put_letter(background_img, 1, 100, 0, 100, 100)
+def draw_keyboard(screen, status, cur_selection):
+    # Stage 0: Selecting Consonant / Vowel / Special
+    # if status[0] == 0:
+    draw_first(screen, status, cur_selection)
+
+    # put_letter(background_img, 0, 0, 0, 100, 100)
+    # put_letter(background_img, 1, 100, 0, 100, 100)
+
+def draw_first(screen, status, cur_selection):
+    draw_boxes(screen, 3, 300, 300, cur_selection)
+
+
+def draw_boxes(screen, num, width, height, cur_selection):
+    error_bool = (num * width > SCREEN_WIDTH or
+                  height > SCREEN_HEIGHT)
+    if error_bool:
+        print("Error in function `draw_boxes`")
+        return
+
+    gap_width = int((SCREEN_WIDTH - num * width) / (num + 1))
+    gap_height = int((SCREEN_HEIGHT - height) / 2)
+    for i in range(0, num):
+        x1 = gap_width * (i + 1) + width * (i) + SELECTION_SCREEN_X1
+        y1 = gap_height
+        x2 = gap_width * (i + 1) + width * (i + 1) + SELECTION_SCREEN_X1
+        y2 = gap_height + height
+        current_color = DEFAULT_COLOR
+        if i == cur_selection:
+            current_color = SELECTION_COLOR
+        cv2.rectangle(screen, (x1, y1), (x2, y2), current_color, -1)
 
 def put_letter(background_img, korean_index, x, y, w, h):
     file_name = "./assets/KOR-Characters/" + str(korean_index) + ".png"

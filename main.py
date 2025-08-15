@@ -21,7 +21,9 @@ status = [0,-1,-1,-1,-1,-1,-1]
 blinked = False
 blink_frozen = False
 
-keyboard = np.full((1000, 1500, 3), [255, 255, 255], dtype=np.uint8)
+keyboard = np.full((SCREEN_HEIGHT, SCREEN_WIDTH, 3), BACKGROUND_COLOR, dtype=np.uint8)
+draw_keyboard(keyboard, status, cur_selection)
+
 while True:
     blinked = False
     _, frame = cap.read()
@@ -86,6 +88,7 @@ while True:
             print("(DEBUG) Current status: " + str(status))
 
         select(status, cur_selection)
+        draw_keyboard(keyboard, status, cur_selection)
         cur_stage = status[0]
         if DEBUG_MODE:
             print("(DEBUG) After Selection: " + str(status))
@@ -100,11 +103,11 @@ while True:
     if (gaze_move_index):
         if 0 <= cur_selection + gaze_direction < MAX_SELECTION_STAGE[cur_stage]:
             cur_selection += gaze_direction
+            draw_keyboard(keyboard, status, cur_selection)
         print("Selection: " + str(cur_selection))
         cur_frame = (cur_frame % BLINK_FREEZE_THRESHOLD)
 
 
-    #draw_keyboard(keyboard, status)
 
     cv2.imshow("Frame", frame)
     cv2.imshow("Checker", checker)

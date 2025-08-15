@@ -102,5 +102,6 @@ def correspondance(character):
                     8: 28}
     return SPECIAL_DICT[character]
 
+# TODO Simulate Keyboard Input
 def enter(character):
     pass
