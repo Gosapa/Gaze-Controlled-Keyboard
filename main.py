@@ -84,6 +84,7 @@ while True:
         blinked = False
         blink_frozen = True
         cur_frame = 0
+        cur_selection = 0
         if DEBUG_MODE:
             print("(DEBUG) Selected")
             print("(DEBUG) Current status: " + str(status))

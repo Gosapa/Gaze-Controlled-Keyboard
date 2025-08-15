@@ -68,7 +68,6 @@ def draw_second(screen, status, cur_selection):
     height = 450
     draw_boxes(screen, box_num, width, height, cur_selection)
 
-
 def put_menu(screen, file_name, start_x, start_y, w, h):
     letter_img_raw = cv2.imread(file_name, cv2.IMREAD_UNCHANGED)
     letter_img = cv2.resize(letter_img_raw, (w, h))
