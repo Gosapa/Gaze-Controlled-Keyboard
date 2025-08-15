@@ -46,10 +46,18 @@ def draw_keyboard(screen, status, cur_selection):
     # put_letter(background_img, 1, 100, 0, 100, 100)
 
 def draw_first(screen, status, cur_selection):
-    draw_boxes(screen, 3, 300, 300, cur_selection)
-    put_menu(screen, "./assets/menu/Consonants.png", 94 + 25, 200 + 25, 250, 250)
-    put_menu(screen, "./assets/menu/Vowels.png", (94) * 2 + 300 + 25, 200 + 25, 250, 250)
-    put_menu(screen, "./assets/menu/Special.png", (94) * 3 + (300) * 2 + 25, 200 + 25, 250, 250)
+    box_num = 3
+    width = 300
+    height = 300
+    draw_boxes(screen, box_num, width, height, cur_selection)
+
+    gap_width = int((SCREEN_WIDTH - box_num * width) / (box_num + 1))
+    gap_height = int((SCREEN_HEIGHT - height) / 2)
+    offset = 25
+    file_order = ["Consonants", "Vowels", "Special"]
+    for i in range(0, 3):
+        file_name = "./assets/menu/" + file_order[i] + ".png"
+        put_menu(screen, file_name, gap_width*(i+1) + width*i + offset, gap_height + offset, width - 50, height - 50)
 
 
 def put_menu(screen, file_name, start_x, start_y, w, h):
