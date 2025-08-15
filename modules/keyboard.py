@@ -47,7 +47,15 @@ def draw_keyboard(screen, status, cur_selection):
 
 def draw_first(screen, status, cur_selection):
     draw_boxes(screen, 3, 300, 300, cur_selection)
+    put_menu(screen, "./assets/menu/Consonants.png", 94 + 25, 200 + 25, 250, 250)
+    put_menu(screen, "./assets/menu/Vowels.png", (94) * 2 + 300 + 25, 200 + 25, 250, 250)
+    put_menu(screen, "./assets/menu/Special.png", (94) * 3 + (300) * 2 + 25, 200 + 25, 250, 250)
 
+
+def put_menu(screen, file_name, start_x, start_y, w, h):
+    letter_img_raw = cv2.imread(file_name, cv2.IMREAD_UNCHANGED)
+    letter_img = cv2.resize(letter_img_raw, (w, h))
+    put_transparent_image(screen, letter_img, start_x, start_y)
 
 def draw_boxes(screen, num, width, height, cur_selection):
     error_bool = (num * width > SCREEN_WIDTH or
