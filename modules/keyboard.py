@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from assets.config import *
+from .logic import *
 
 def put_transparent_image(background_img, overlay_img, x, y):
     # background_img = background_img.copy()
@@ -44,9 +45,8 @@ def draw_keyboard(screen, status, cur_selection):
     # Stage 1: Selecting first stage
     elif status[0] == 1:
         draw_second(screen, status, cur_selection)
-
-    # put_letter(background_img, 0, 0, 0, 100, 100)
-    # put_letter(background_img, 1, 100, 0, 100, 100)
+    else:
+        draw_bsearch(screen, status, cur_selection)
 
 def draw_first(screen, status, cur_selection):
     box_num = 3
@@ -64,15 +64,50 @@ def draw_first(screen, status, cur_selection):
 
 def draw_second(screen, status, cur_selection):
     box_num = 2
-    width = 450
+    width = 600
     height = 450
-    draw_boxes(screen, box_num, width, height, cur_selection)
+    if status[1] == 0:
+        # Show 0 ~ 6 / 7 ~ 13
+        draw_boxes(screen, box_num, width, height, cur_selection)
+        pass
+    elif status[1] == 1:
+        # Show 14 ~ 18 / 19 ~ 23
+        pass
+
+def draw_bsearch(screen, status, cur_selection):
+    full_range = get_range(status)
+    cur_selection = character(status)
+    # Iterate by the length of `full_range`, draw unselected boxes and selected boxes
+    # put_letter(background_img, 0, 0, 0, 100, 100)
+    # put_letter(background_img, 1, 100, 0, 100, 100)
+    pass
+
+def get_range(status):
+    ret = []
+    # If consonants
+    if status[1] == 0:
+        # If left half
+        if status[2] == 0:
+            ret = list(range(0, 7))
+        elif status[2] == 1:
+            ret = list(range(7, 14))
+    elif status[1] == 1:
+        if status[2] == 0:
+            ret = list(range(14, 19))
+        elif status[2] == 1:
+            ret = list(range(19, 24))
+    else:
+        pass
+    return ret
+
+
 
 def put_menu(screen, file_name, start_x, start_y, w, h):
     letter_img_raw = cv2.imread(file_name, cv2.IMREAD_UNCHANGED)
     letter_img = cv2.resize(letter_img_raw, (w, h))
     put_transparent_image(screen, letter_img, start_x, start_y)
 
+#
 def draw_boxes(screen, num, width, height, cur_selection):
     error_bool = (num * width > SCREEN_WIDTH or
                   height > SCREEN_HEIGHT)
