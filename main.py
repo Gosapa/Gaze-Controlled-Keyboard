@@ -58,8 +58,8 @@ while True:
 
 
         cv2.putText(frame, "Ratio: " + str(combined_gaze_ratio), (50, 150), font, 2, (0, 0, 255), 3)
-        looking_right = (combined_gaze_ratio <= 0.5)
-        looking_left = (3.5 < combined_gaze_ratio )
+        looking_right = (combined_gaze_ratio <= RIGHT_GAZE_THRESHOLD)
+        looking_left = (LEFT_GAZE_THRESHOLD < combined_gaze_ratio )
         if looking_right:
             cv2.putText(frame, "Right", (50, 100), font, 2, (0, 0, 255), 3)
             checker[:] = (0, 0, 255)
@@ -84,13 +84,13 @@ while True:
         blinked = False
         blink_frozen = True
         cur_frame = 0
-        cur_selection = 0
         if DEBUG_MODE:
             print("(DEBUG) Selected")
             print("(DEBUG) Current status: " + str(status))
 
         select(status, cur_selection)
         draw_keyboard(keyboard, status, cur_selection)
+        cur_selection = 0
         cur_stage = status[0]
         if DEBUG_MODE:
             print("(DEBUG) After Selection: " + str(status))
