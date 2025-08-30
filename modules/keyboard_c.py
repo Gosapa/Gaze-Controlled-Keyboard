@@ -2,6 +2,7 @@ import numpy as np
 from assets.config import *
 from modules.logic import *
 from modules.keyboard import *
+from modules.input_simulation import PressKey, ReleaseKey
 
 class Keyboard:
     # Variables - General
@@ -45,11 +46,15 @@ class Keyboard:
         # Done selecting a character
         if len(returned_characters) == 1:
             self.status = [0, -1, -1, -1, -1, -1, -1]
-            # enter(character) # TODO
+            self.enter(returned_characters)
             return True
         return False
 
     # Helper Functions
+    def enter(self, character):
+        PressKey(KOREAN_KEYBOARD_HEX[character[0]])
+        ReleaseKey(KOREAN_KEYBOARD_HEX[character[0]])
+        print("(DEBUG) Entering `" + str(character[0]) + "`")
     def update_status(self):
         update_idx = 1
         while self.status[update_idx] != -1:
