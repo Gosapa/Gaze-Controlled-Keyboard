@@ -1,6 +1,6 @@
 MAX_SELECTION_STAGE = [3,2,2,2,2,2,2]
 FRAME_THRESHOLD = 10
-BLINK_FREEZE_THRESHOLD = 30
+BLINK_FREEZE_THRESHOLD = 20
 DEBUG_MODE = True
 
 SCREEN_WIDTH = 1275
@@ -19,5 +19,5 @@ DEACTIVATED_COLOR = [130, 130, 130]
 LEFT_GAZE_THRESHOLD = 1.8
 RIGHT_GAZE_THRESHOLD =  0.8
 
-KOREAN_LIST = ["ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"]
-KOREAN_KEYBOARD_HEX = [0x52, 0x53, 0x45, 0x46, 0x41, 0x51, 0x54, 0x44, 0x57, 0x43, 0x5A, 0x58, 0x56, 0x47]
+KOREAN_LIST = ["ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ", "ㅏ", "ㅑ", "ㅓ", "ㅕ", "ㅗ", "ㅛ", "ㅜ", "ㅠ", "ㅡ","ㅣ", "ㄲ"]
+KOREAN_KEYBOARD_HEX = [0x52, 0x53, 0x45, 0x46, 0x41, 0x51, 0x54, 0x44, 0x57, 0x43, 0x5A, 0x58, 0x56, 0x47, 0x4B, 0x49, 0x4A, 0x55, 0x48, 0x59, 0x4E, 0x42, 0x4D, 0x4C]

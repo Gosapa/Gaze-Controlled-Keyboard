@@ -28,24 +28,25 @@ def update_status(status, selection):
     status[update_idx] = selection
     status[0] += 1
 
-def character(status):
+def character(status, isSpecialEntered):
     if status[0] == 0:
         print("ERROR: No type selected")
         return
     # Consonant
     if status[1] == 0:
-        return find_bsearch_consonant(status[2:])
+        return find_bsearch_consonant(status[2:], isSpecialEntered)
     # Vowel
     elif status[1] == 1:
-        return find_bsearch_vowel(status[2:])
+        return find_bsearch_vowel(status[2:], isSpecialEntered)
     # Special
     else:
         pass
 
-def find_bsearch_consonant(selections):
+def find_bsearch_consonant(selections, isSpecialEntered):
     left = 0
     right = 14
     idx = 0
+    newSpecialValue = False
     while left + 1 < right:
         mid = left + int((right - left - 1) / 2)
         if selections[idx] == 0:
@@ -58,17 +59,19 @@ def find_bsearch_consonant(selections):
     final_range = list(range(left, right))
     if DEBUG_MODE:
         print("(DEBUG) In function `find_bsearch_consonant`: idx: " + str(idx))
-    if len(final_range) == 1 and selections[4] == -1 and is_special(left):
+    if len(final_range) == 1 and not isSpecialEntered and is_special(left):
         final_range.append(correspondance(left))
-    elif len(final_range) == 1 and selections[4] != -1 and is_special(left):
+        newSpecialValue = True
+    elif len(final_range) == 1 and isSpecialEntered and is_special(left):
         if selections[idx] == 1:
             final_range[0] = correspondance(left)
-    return final_range
+    return final_range, newSpecialValue
 
-def find_bsearch_vowel(selections):
+def find_bsearch_vowel(selections, isSpecialEntered):
     left = 14
     right = 23
     idx = 0
+    newSpecialValue = False
     while left + 1 < right:
         mid = left + int((right - left - 1) / 2)
         if selections[idx] == 0:
@@ -81,12 +84,13 @@ def find_bsearch_vowel(selections):
     final_range = list(range(left, right))
     if DEBUG_MODE:
         print("(DEBUG) In function `find_bsearch_consonant`: idx: " + str(idx))
-    if len(final_range) == 1 and selections[4] == -1 and is_special(left):
+    if len(final_range) == 1 and not isSpecialEntered and is_special(left):
         final_range.append(correspondance(left))
-    elif len(final_range) == 1 and selections[4] != -1 and is_special(left):
+        newSpecialValue = True
+    elif len(final_range) == 1 and isSpecialEntered and is_special(left):
         if selections[idx] == 1:
             final_range[0] = correspondance(left)
-    return final_range
+    return final_range, newSpecialValue
 
 
 def is_special(character):

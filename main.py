@@ -107,7 +107,7 @@ while True:
 
 
     cv2.imshow("Frame", frame)
-    cv2.imshow("Checker", checker)
+    # cv2.imshow("Checker", checker)
     cv2.imshow("Keyboard", keyboard.screen)
 
     cur_frame += 1
