@@ -100,20 +100,21 @@ def get_range(status):
         pass
     return ret
 
-
-
 def put_menu(screen, file_name, start_x, start_y, w, h):
     letter_img_raw = cv2.imread(file_name, cv2.IMREAD_UNCHANGED)
     letter_img = cv2.resize(letter_img_raw, (w, h))
     put_transparent_image(screen, letter_img, start_x, start_y)
 
-#
 def draw_boxes(screen, num, width, height, cur_selection):
     error_bool = (num * width > SCREEN_WIDTH or
                   height > SCREEN_HEIGHT)
     if error_bool:
         print("Error in function `draw_boxes`")
         return
+
+    selections_to_check = set(cur_selection) if isinstance(cur_selection, list) else {cur_selection}
+    if isinstance(cur_selection, list):
+        print(cur_selection)
 
     gap_width = int((SCREEN_WIDTH - num * width) / (num + 1))
     gap_height = int((SCREEN_HEIGHT - height) / 2)
@@ -122,9 +123,9 @@ def draw_boxes(screen, num, width, height, cur_selection):
         y1 = gap_height
         x2 = gap_width * (i + 1) + width * (i + 1) + SELECTION_SCREEN_X1
         y2 = gap_height + height
-        current_color = DEFAULT_COLOR
-        if i == cur_selection:
-            current_color = SELECTION_COLOR
+
+        current_color = SELECTION_COLOR if i in selections_to_check else DEFAULT_COLOR
+
         cv2.rectangle(screen, (x1, y1), (x2, y2), current_color, -1)
 
 def put_letter(background_img, korean_index, x, y, w, h):

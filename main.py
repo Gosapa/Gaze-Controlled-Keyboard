@@ -2,7 +2,8 @@ import cv2
 import numpy as np
 import dlib
 from modules.gazeDetection import *
-from modules.keyboard import *
+# from modules.keyboard import *
+from modules.keyboard_c import *
 from assets.config import *
 from modules.logic import *
 
@@ -14,15 +15,13 @@ predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
 cur_frame = 0
 cur_selection = 0
-cur_stage = 0
 gaze_direction = 0
-status = [0,-1,-1,-1,-1,-1,-1]
 
 blinked = False
 blink_frozen = False
 
-keyboard = np.full((SCREEN_HEIGHT, SCREEN_WIDTH, 3), BACKGROUND_COLOR, dtype=np.uint8)
-draw_keyboard(keyboard, status, cur_selection)
+keyboard = Keyboard()
+keyboard.update_keyboard()
 
 while True:
     blinked = False
@@ -76,25 +75,20 @@ while True:
     blink_select = (blinked and not blink_frozen)
     gaze_move_index = (cur_frame % FRAME_THRESHOLD == 0)
 
-    # Prevents Consecutive Selecting in a Single Blink
 
     # Blink - Selection Logic
     if (blink_select):
-        keyboard = np.full((SCREEN_HEIGHT, SCREEN_WIDTH, 3), BACKGROUND_COLOR, dtype=np.uint8)
         blinked = False
         blink_frozen = True
         cur_frame = 0
         if DEBUG_MODE:
             print("(DEBUG) Selected")
-            print("(DEBUG) Current status: " + str(status))
-
-        select(status, cur_selection)
-        draw_keyboard(keyboard, status, cur_selection)
+            print("(DEBUG) Current status: " + str(keyboard.status))
+        keyboard.select()
+        keyboard.update_keyboard()
         cur_selection = 0
-        cur_stage = status[0]
         if DEBUG_MODE:
-            print("(DEBUG) After Selection: " + str(status))
-
+            print("(DEBUG) After Selection: " + str(keyboard.status))
     if (unfreeze_frame):
         blink_frozen = False
         blinked = False
@@ -103,17 +97,18 @@ while True:
 
     # Updates current selection according to the gaze
     if (gaze_move_index):
-        if 0 <= cur_selection + gaze_direction < MAX_SELECTION_STAGE[cur_stage]:
+        change_in_selection = False
+        if 0 <= cur_selection + gaze_direction < MAX_SELECTION_STAGE[keyboard.status[0]]:
             cur_selection += gaze_direction
-            draw_keyboard(keyboard, status, cur_selection)
+            keyboard.update_current_selection(cur_selection)
+            keyboard.update_keyboard()
         print("Selection: " + str(cur_selection))
         cur_frame = (cur_frame % BLINK_FREEZE_THRESHOLD)
 
 
-
     cv2.imshow("Frame", frame)
     cv2.imshow("Checker", checker)
-    cv2.imshow("Keyboard", keyboard)
+    cv2.imshow("Keyboard", keyboard.screen)
 
     cur_frame += 1
     # print(cur_frame)
