@@ -1,4 +1,5 @@
 import cv2
+from PIL import ImageFont, ImageDraw, Image
 import numpy as np
 from assets.config import *
 from .logic import *
@@ -48,39 +49,6 @@ def draw_keyboard(screen, status, cur_selection):
     else:
         draw_bsearch(screen, status, cur_selection)
 
-def draw_first(screen, status, cur_selection):
-    box_num = 3
-    width = 300
-    height = 300
-    draw_boxes(screen, box_num, width, height, cur_selection)
-
-    gap_width = int((SCREEN_WIDTH - box_num * width) / (box_num + 1))
-    gap_height = int((SCREEN_HEIGHT - height) / 2)
-    offset = 25
-    file_order = ["Consonants", "Vowels", "Special"]
-    for i in range(0, 3):
-        file_name = "./assets/menu/" + file_order[i] + ".png"
-        put_menu(screen, file_name, gap_width*(i+1) + width*i + offset, gap_height + offset, width - 50, height - 50)
-
-def draw_second(screen, status, cur_selection):
-    box_num = 2
-    width = 600
-    height = 450
-    if status[1] == 0:
-        # Show 0 ~ 6 / 7 ~ 13
-        draw_boxes(screen, box_num, width, height, cur_selection)
-        pass
-    elif status[1] == 1:
-        # Show 14 ~ 18 / 19 ~ 23
-        pass
-
-def draw_bsearch(screen, status, cur_selection):
-    full_range = get_range(status)
-    cur_selection = character(status)
-    # Iterate by the length of `full_range`, draw unselected boxes and selected boxes
-    # put_letter(background_img, 0, 0, 0, 100, 100)
-    # put_letter(background_img, 1, 100, 0, 100, 100)
-    pass
 
 def get_range(status):
     ret = []
@@ -113,8 +81,6 @@ def draw_boxes(screen, num, width, height, cur_selection):
         return
 
     selections_to_check = set(cur_selection) if isinstance(cur_selection, list) else {cur_selection}
-    if isinstance(cur_selection, list):
-        print(cur_selection)
 
     gap_width = int((SCREEN_WIDTH - num * width) / (num + 1))
     gap_height = int((SCREEN_HEIGHT - height) / 2)
@@ -127,9 +93,47 @@ def draw_boxes(screen, num, width, height, cur_selection):
         current_color = SELECTION_COLOR if i in selections_to_check else DEFAULT_COLOR
 
         cv2.rectangle(screen, (x1, y1), (x2, y2), current_color, -1)
+def draw_boxes_bsearch(screen, total_list, width, height, selection_list, active_list):
+    num = len(total_list)
+    error_bool = (num * width > SCREEN_WIDTH or
+                  height > SCREEN_HEIGHT)
+    if error_bool:
+        print("Error in function `draw_boxes`")
+        return
+
+    gap_width = int((SCREEN_WIDTH - num * width) / (num + 1))
+    gap_height = int((SCREEN_HEIGHT - height) / 2)
+    for i in range(len(total_list)):
+        x1 = gap_width * (i + 1) + width * (i) + SELECTION_SCREEN_X1
+        y1 = gap_height
+        x2 = gap_width * (i + 1) + width * (i + 1) + SELECTION_SCREEN_X1
+        y2 = gap_height + height
+
+        if total_list[i] in selection_list:
+            current_color = SELECTION_COLOR
+        elif total_list[i] in active_list:
+            current_color = DEFAULT_COLOR
+        else:
+            current_color = DEACTIVATED_COLOR
+        cv2.rectangle(screen, (x1, y1), (x2, y2), current_color, -1)
+
 
 def put_letter(background_img, korean_index, x, y, w, h):
     file_name = "./assets/KOR-Characters/" + str(korean_index) + ".png"
     letter_img_raw = cv2.imread(file_name, cv2.IMREAD_UNCHANGED)
     letter_img = cv2.resize(letter_img_raw, (int(0.75 * w) , int(0.75 * h)))
     put_transparent_image(background_img, letter_img, int(x + 0.25 * w), int(y + 0.25 * h))
+
+def put_letter_font(screen, text, position, font_size):
+    font_path = "./assets/nanum-kor.ttf"
+    img_pil = Image.fromarray(cv2.cvtColor(screen, cv2.COLOR_BGR2RGB))
+    draw = ImageDraw.Draw(img_pil)
+    try:
+        font = ImageFont.truetype(font_path, font_size)
+    except IOError:
+        print(f"Error: Font file not found at {font_path}")
+        return screen
+    draw.text(position, text, font=font, fill=(0,0,0))
+    screen_with_text = cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
+    screen[:] = screen_with_text
+

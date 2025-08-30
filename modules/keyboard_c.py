@@ -86,11 +86,19 @@ class Keyboard:
         width = 600
         height = 450
         if self.status[1] == 0:
-                draw_boxes(self.screen, box_num, width, height, self.cur_selection)
+            draw_boxes(self.screen, box_num, width, height, self.cur_selection)
+            put_letter_font(self.screen, "ㄱ~ㅅ", (0, 200), 250)
+            put_letter_font(self.screen, "ㅇ~ㅎ", (650, 200), 250)
         elif self.status[1] == 1:
                 pass
     def draw_bsearch(self):
         box_num = len(self.total_list)
-        width = 100
-        height = 100
-        draw_boxes(self.screen, box_num, width, height, self.selection_list[self.cur_selection])
+        width = 150
+        height = 150
+        draw_boxes_bsearch(self.screen, self.total_list, width, height, self.selection_list[self.cur_selection], self.active_list)
+        for i in range(box_num):
+            start_offset = 10
+            xpos = i * 179
+            ypos = 250
+            font_size = 180
+            put_letter_font(self.screen, KOREAN_LIST[self.total_list[i]], (start_offset + xpos, ypos), font_size)
